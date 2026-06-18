@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Tycoon — by Tumisang Khabisi</title>
+  <!-- Google Fonts: Inter — matches the font used on angkhabisi.github.io -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --surface2: #1c1c1c;
+      --border: rgba(255,255,255,0.08);
+      --border-strong: rgba(255,255,255,0.15);
+      --text: #f0f0f0;
+      --muted: #666;
+      --accent: #00e5a0;
+      --accent-dim: rgba(0,229,160,0.12);
+      --red: #ff5c5c;
+      --amber: #f5a623;
+      --blue: #4da6ff;
+      --radius: 10px;
+      --sans: 'Inter', sans-serif;
+    }
+
+    body {
+      /*
+      ============================================================
+      BACKGROUND IMAGE — YOUR PHOTO
+      ============================================================
+      To use your portrait as a background (like on your portfolio):
+
+      1. Put your photo in the same folder as this file.
+         e.g. save it as "bg.jpg" next to code-tycoon.html
+
+      2. Replace the two lines below:
+            background: var(--bg);
+         with:
+            background: url('bg.jpg') center top / cover no-repeat fixed;
+
+      3. The dark overlay beneath the game content is already handled
+         by --surface having semi-transparent dark cards on top.
+         If your photo is too bright, add this line after the above:
+            background-blend-mode: overlay;
+         or wrap body content in a div with:
+            background: rgba(0,0,0,0.65);
+      ============================================================
+      */
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px 48px;
+    }
+
+    /* Header */
+    .header {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    .header-title { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+    .header-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .phase-badge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border-strong);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+
+    /* Stats grid */
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 16px;
+    }
+    .stat {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+    }
+    .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .stat-value { font-size: 22px; font-weight: 700; color: var(--text); }
+    .stat-value.green { color: var(--accent); }
+
+    /* Section */
+    .section { width: 100%; max-width: 480px; margin-bottom: 16px; }
+    .section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-bottom: 8px;
+      padding-left: 2px;
+    }
+
+    /* Buttons */
+    .btn {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: background 0.1s, border-color 0.1s, transform 0.08s;
+      margin-bottom: 7px;
+      text-align: left;
+      color: var(--text);
+      font-family: var(--sans);
+    }
+    .btn:hover:not(:disabled) { background: var(--surface2); border-color: var(--border-strong); }
+    .btn:active:not(:disabled) { transform: scale(0.985); }
+    .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .btn-name { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+    .btn-desc { font-size: 11px; color: var(--muted); }
+    .btn-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .cost { font-size: 13px; font-weight: 600; color: var(--accent); white-space: nowrap; }
+    .cost.unaffordable { color: var(--red); }
+    .badge {
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.06);
+      color: var(--muted);
+      white-space: nowrap;
+    }
+    .badge.active { background: var(--accent-dim); color: var(--accent); }
+
+    /* Prestige button */
+    .prestige-btn {
+      width: 100%;
+      max-width: 480px;
+      background: linear-gradient(135deg, #7B2FBE, #4B0082);
+      border: none;
+      border-radius: var(--radius);
+      padding: 14px;
+      color: #fff;
+      font-family: var(--sans);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.02em;
+      margin-bottom: 16px;
+      display: none;
+      transition: opacity 0.15s, transform 0.08s;
+    }
+    .prestige-btn:hover { opacity: 0.9; }
+    .prestige-btn:active { transform: scale(0.985); }
+
+    /* Progress */
+    .progress-section { width: 100%; max-width: 480px; margin-bottom: 16px; }
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .progress-track {
+      height: 3px;
+      background: var(--surface2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width 0.3s;
+    }
+
+    /* Log */
+    .log {
+      width: 100%;
+      max-width: 480px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      max-height: 140px;
+      overflow-y: auto;
+    }
+    .log-line { font-size: 11px; line-height: 1.9; color: var(--muted); }
+    .log-line.good { color: var(--accent); }
+    .log-line.bad { color: var(--red); }
+    .log-line.info { color: var(--blue); }
+    .log-line.milestone { color: var(--amber); }
+
+    /* Scrollbar */
+    .log::-webkit-scrollbar { width: 4px; }
+    .log::-webkit-scrollbar-track { background: transparent; }
+    .log::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 2px; }
+
+    /* Footer */
+    .footer {
+      width: 100%;
+      max-width: 480px;
+      margin-top: 24px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .footer a { color: var(--accent); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      <div class="header-title">Code Tycoon</div>
+      <div class="header-sub">by Tumisang Khabisi</div>
+    </div>
+    <div class="phase-badge" id="phase-label">Junior Dev</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">💰 Budget</div>
+      <div class="stat-value green" id="money">$0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">⭐ Reputation</div>
+      <div class="stat-value" id="rep">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">🖥️ Lines / sec</div>
+      <div class="stat-value" id="lps">0</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">👩‍💻 Devs</div>
+      <div class="stat-value" id="devs">0</div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="section">
+    <div class="section-label">Actions</div>
+
+    <button class="btn" onclick="writeCode()">
+      <div>
+        <div class="btn-name">Write code</div>
+        <div class="btn-desc">+<span id="click-power">10</span> lines manually</div>
+      </div>
+      <div class="btn-right"><span class="cost">Free</span></div>
+    </button>
+
+    <button class="btn" id="btn-freelance" onclick="doFreelance()">
+      <div>
+        <div class="btn-name">Take freelance gig</div>
+        <div class="btn-desc" id="freelance-desc">Deliver 500 lines → $150</div>
+      </div>
+      <div class="btn-right"><span class="cost" id="freelance-status">accept</span></div>
+    </button>
+
+    <button class="btn" id="btn-launch" onclick="launchProduct()" disabled>
+      <div>
+        <div class="btn-name">Launch product</div>
+        <div class="btn-desc">Need 2,000 lines + rep 5</div>
+      </div>
+      <div class="btn-right"><span class="cost" id="launch-status">locked</span></div>
+    </button>
+  </div>
+
+  <!-- Upgrades -->
+  <div class="section">
+    <div class="section-label">Upgrades</div>
+
+    <button class="btn" id="btn-hire" onclick="hire()">
+      <div>
+        <div class="btn-name">Hire a developer</div>
+        <div class="btn-desc">+2 lines / sec passive</div>
+      </div>
+      <div class="btn-right">
+        <span class="badge" id="hire-count">0 hired</span>
+        <span class="cost" id="hire-cost">$200</span>
+      </div>
+    </button>
+
+    <button class="btn" id="btn-coffee" onclick="buyCoffee()">
+      <div>
+        <div class="btn-name">Better coffee</div>
+        <div class="btn-desc">2× your click power</div>
+      </div>
+      <div class="btn-right">
+        <span class="badge" id="coffee-count">lv 0</span>
+        <span class="cost" id="coffee-cost">$100</span>
+      </div>
+    </button>
+
+    <button class="btn" id="btn-ci" onclick="buyCI()">
+      <div>
+        <div class="btn-name">Set up CI/CD</div>
+        <div class="btn-desc">+50% dev output</div>
+      </div>
+      <div class="btn-right">
+        <span class="badge" id="ci-count">lv 0</span>
+        <span class="cost" id="ci-cost">$500</span>
+      </div>
+    </button>
+
+    <button class="btn" id="btn-ai" onclick="buyAI()">
+      <div>
+        <div class="btn-name">AI coding tools</div>
+        <div class="btn-desc">3× all output</div>
+      </div>
+      <div class="btn-right">
+        <span class="badge" id="ai-count">lv 0</span>
+        <span class="cost" id="ai-cost">$1,200</span>
+      </div>
+    </button>
+  </div>
+
+  <!-- Progress -->
+  <div class="progress-section">
+    <div class="progress-meta">
+      <span>Total lines: <strong id="total-lines">0</strong></span>
+      <span id="progress-label">→ First commit (1,000)</span>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progress" style="width:0%"></div></div>
+  </div>
+
+  <!-- Prestige -->
+  <button class="prestige-btn" id="prestige-btn" onclick="prestige()">🚀 Found a Startup (Prestige)</button>
+
+  <!-- Dev log -->
+  <div class="section-label" style="width:100%;max-width:480px;">Dev log</div>
+  <div class="log" id="log"></div>
+
+  <div class="footer">
+    <a href="https://angkhabisi.github.io" target="_blank" rel="noopener">angkhabisi.github.io</a>
+    &nbsp;·&nbsp; Backend Developer
+  </div>
+
+<script>
+  const MILESTONES = [1000, 5000, 15000, 50000, 200000];
+  const MILESTONE_LABELS = ['First commit!', 'Side project shipped', 'MVP live', 'Series A', 'Tech unicorn'];
+  const PHASES = ['Junior Dev', 'Mid Dev', 'Senior Dev', 'Tech Lead', 'CTO'];
+
+  let s = {
+    money: 0, rep: 0, totalLines: 0,
+    devs: 0, coffeeLevel: 0, ciLevel: 0, aiLevel: 0,
+    freelanceTarget: 500, freelanceLines: 0, freelanceActive: false,
+    launches: 0, prestigeCount: 0, milestoneIndex: 0
+  };
+
+  function lps() {
+    return s.devs * 2 * (1 + s.ciLevel * 0.5) * (s.aiLevel > 0 ? 3 : 1);
+  }
+  function clickPower() {
+    return 10 * Math.pow(2, s.coffeeLevel) * (s.aiLevel > 0 ? 3 : 1);
+  }
+  function hireCost()   { return Math.floor(200  * Math.pow(1.5, s.devs)); }
+  function coffeeCost() { return Math.floor(100  * Math.pow(2.2, s.coffeeLevel)); }
+  function ciCost()     { return Math.floor(500  * Math.pow(2.5, s.ciLevel)); }
+  function aiCost()     { return Math.floor(1200 * Math.pow(3,   s.aiLevel)); }
+
+  function addLines(n) {
+    s.totalLines += n;
+    if (s.freelanceActive) {
+      s.freelanceLines += n;
+      if (s.freelanceLines >= s.freelanceTarget) completeFreelance();
+    }
+  }
+
+  function writeCode() {
+    let p = clickPower();
+    addLines(p);
+    log(`Wrote ${p} lines.`, 'good');
+  }
+
+  function doFreelance() {
+    if (s.freelanceActive) return;
+    s.freelanceActive = true;
+    s.freelanceLines = 0;
+    log(`Accepted freelance gig: deliver ${s.freelanceTarget} lines.`, 'info');
+  }
+
+  function completeFreelance() {
+    let earn = Math.floor(s.freelanceTarget * 0.3);
+    s.money += earn;
+    s.rep += 1;
+    s.freelanceActive = false;
+    s.freelanceLines = 0;
+    s.freelanceTarget = Math.floor(s.freelanceTarget * 1.4);
+    log(`Gig done! +$${earn}, +1 rep.`, 'good');
+  }
+
+  function launchProduct() {
+    if (s.totalLines < 2000 || s.rep < 5) return;
+    let earn = 300 + s.launches * 250 + s.rep * 50;
+    s.money += earn;
+    s.rep += 3;
+    s.launches++;
+    log(`Product #${s.launches} launched! +$${earn}, +3 rep. 🚀`, 'good');
+  }
+
+  function hire() {
+    let c = hireCost();
+    if (s.money < c) { log(`Need $${c} to hire.`, 'bad'); return; }
+    s.money -= c; s.devs++;
+    log(`Hired dev #${s.devs}. Team growing!`, 'info');
+  }
+
+  function buyCoffee() {
+    let c = coffeeCost();
+    if (s.money < c) { log(`Need $${c} for better coffee.`, 'bad'); return; }
+    s.money -= c; s.coffeeLevel++;
+    log(`Coffee upgraded to lv ${s.coffeeLevel}. Click power doubled!`, 'info');
+  }
+
+  function buyCI() {
+    let c = ciCost();
+    if (s.money < c) { log(`Need $${c} for CI/CD.`, 'bad'); return; }
+    s.money -= c; s.ciLevel++;
+    log(`CI/CD lv ${s.ciLevel} online. Devs are faster!`, 'info');
+  }
+
+  function buyAI() {
+    let c = aiCost();
+    if (s.money < c) { log(`Need $${c} for AI tools.`, 'bad'); return; }
+    s.money -= c; s.aiLevel++;
+    log(`AI tools subscribed (lv ${s.aiLevel}). Everything 3×!`, 'info');
+  }
+
+  function prestige() {
+    let keep = Math.floor(s.money * 0.1);
+    let repKeep = s.rep;
+    s = {
+      money: keep, rep: repKeep, totalLines: 0,
+      devs: 0, coffeeLevel: 0, ciLevel: 0, aiLevel: 0,
+      freelanceTarget: 500, freelanceLines: 0, freelanceActive: false,
+      launches: 0, prestigeCount: s.prestigeCount + 1, milestoneIndex: 0
+    };
+    log(`Startup founded! Prestige #${s.prestigeCount}. Kept $${keep} seed money.`, 'milestone');
+  }
+
+  function fmt(n) {
+    if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+    if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+    return '$' + Math.floor(n);
+  }
+
+  function log(msg, cls = '') {
+    const el = document.getElementById('log');
+    const line = document.createElement('div');
+    line.className = 'log-line ' + cls;
+    line.textContent = '> ' + msg;
+    el.prepend(line);
+    while (el.children.length > 14) el.removeChild(el.lastChild);
+  }
+
+  function render() {
+    document.getElementById('money').textContent    = fmt(s.money);
+    document.getElementById('rep').textContent      = s.rep;
+    document.getElementById('lps').textContent      = Math.round(lps());
+    document.getElementById('devs').textContent     = s.devs;
+    document.getElementById('click-power').textContent = Math.round(clickPower());
+    document.getElementById('hire-count').textContent  = s.devs + ' hired';
+    document.getElementById('coffee-count').textContent = 'lv ' + s.coffeeLevel;
+    document.getElementById('ci-count').textContent    = 'lv ' + s.ciLevel;
+    document.getElementById('ai-count').textContent    = 'lv ' + s.aiLevel;
+    document.getElementById('total-lines').textContent = s.totalLines.toLocaleString();
+
+    function setCost(id, val, affordable) {
+      const el = document.getElementById(id);
+      el.textContent = fmt(val);
+      el.className = 'cost' + (affordable ? '' : ' unaffordable');
+    }
+    setCost('hire-cost',   hireCost(),   s.money >= hireCost());
+    setCost('coffee-cost', coffeeCost(), s.money >= coffeeCost());
+    setCost('ci-cost',     ciCost(),     s.money >= ciCost());
+    setCost('ai-cost',     aiCost(),     s.money >= aiCost());
+
+    // Freelance
+    let fl = s.freelanceActive;
+    document.getElementById('btn-freelance').disabled = fl;
+    document.getElementById('freelance-status').textContent = fl ? `${s.freelanceLines}/${s.freelanceTarget}` : 'accept';
+    document.getElementById('freelance-desc').textContent = fl
+      ? `Writing... ${s.freelanceLines}/${s.freelanceTarget} lines`
+      : `Deliver ${s.freelanceTarget} lines → $${Math.floor(s.freelanceTarget * 0.3)}`;
+
+    // Launch
+    let launchReady = s.totalLines >= 2000 && s.rep >= 5;
+    document.getElementById('btn-launch').disabled = !launchReady;
+    document.getElementById('launch-status').textContent = launchReady ? 'launch 🚀' : (s.totalLines >= 2000 ? 'need rep 5' : `${s.totalLines}/2,000`);
+
+    // Phase
+    let pi = Math.min(Math.floor(s.rep / 5), PHASES.length - 1);
+    document.getElementById('phase-label').textContent = PHASES[pi];
+
+    // Progress
+    let next = MILESTONES[Math.min(s.milestoneIndex, MILESTONES.length - 1)];
+    let pct  = Math.min(100, (s.totalLines / next) * 100);
+    document.getElementById('progress').style.width = pct.toFixed(1) + '%';
+    if (s.totalLines >= next && s.milestoneIndex < MILESTONES.length) {
+      log(`Milestone: ${MILESTONE_LABELS[s.milestoneIndex]} 🎉`, 'milestone');
+      s.milestoneIndex++;
+    }
+    let ni   = Math.min(s.milestoneIndex, MILESTONES.length - 1);
+    document.getElementById('progress-label').textContent =
+      `→ ${MILESTONE_LABELS[ni]} (${MILESTONES[ni]?.toLocaleString()})`;
+
+    // Prestige
+    document.getElementById('prestige-btn').style.display =
+      (s.rep >= 20 && s.launches >= 3) ? 'block' : 'none';
+  }
+
+  setInterval(() => {
+    let earned = lps() / 10;
+    if (earned > 0) addLines(earned);
+    render();
+  }, 100);
+
+  log('Welcome. Start writing code.', 'info');
+  render();
+</script>
+</body>
+</html>
