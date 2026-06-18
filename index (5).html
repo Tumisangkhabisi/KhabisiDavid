@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tumisang Khabisi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #000;
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 430px;
+      min-height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ─── HERO SECTION ─── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 520px;
+      background: #111; /* fallback if no image */
+    }
+
+    /* 
+      ================================================
+      📸 ADD YOUR PHOTO HERE
+      Replace the background-image URL below with your 
+      own photo. You can use an online image URL or a 
+      base64 encoded image.
+      
+      Example:
+        background-image: url('https://your-image-url.com/photo.jpg');
+      
+      Tips:
+      - Use a professional headshot with a dark background
+      - Portrait orientation works best
+      - The image will be cropped to fill the hero area
+      ================================================
+    */
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+      display: block;
+
+      /* ← REPLACE THIS SRC WITH YOUR PHOTO */
+      /* <img> tag is below in the HTML — update the src attribute there */
+    }
+
+    /* Dark gradient overlay so text is readable */
+    .hero-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 65%;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0,0,0,0.5) 40%,
+        rgba(0,0,0,0.92) 75%,
+        #000 100%
+      );
+    }
+
+    /* ─── PROFILE INFO (overlaid on hero) ─── */
+    .profile-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 24px 28px;
+      text-align: center;
+    }
+
+    .profile-name {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      margin-bottom: 4px;
+      text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+    }
+
+    /* 
+      ================================================
+      🏷️ YOUR USERNAME / HANDLE
+      Update the @handle below to match your social
+      media username or preferred display handle.
+      ================================================
+    */
+    .profile-handle {
+      font-size: 15px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.75);
+      letter-spacing: 0.2px;
+      margin-bottom: 18px;
+    }
+
+    /* ─── SOCIAL ICONS ROW ─── */
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 18px;
+      margin-bottom: 0;
+    }
+
+    .social-icon {
+      width: 34px;
+      height: 34px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+      text-decoration: none;
+    }
+
+    .social-icon:hover {
+      opacity: 0.75;
+      transform: scale(1.1);
+    }
+
+    .social-icon svg {
+      width: 26px;
+      height: 26px;
+      fill: #fff;
+    }
+
+    /* ─── TAGLINE BELOW HERO ─── */
+    .tagline {
+      background: #000;
+      padding: 18px 24px 8px;
+      text-align: center;
+    }
+
+    /* 
+      ================================================
+      ✏️ YOUR BIO / TAGLINE
+      Update the text inside .tagline-text below.
+      This appears just below your photo section.
+      Keep it short and punchy — 1 or 2 lines max.
+      ================================================
+    */
+    .tagline-text {
+      font-size: 14px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.80);
+      line-height: 1.6;
+    }
+
+    /* ─── LINK CARDS SECTION ─── */
+    .cards-section {
+      background: #000;
+      padding: 20px 16px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .card {
+      border-radius: 18px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      text-decoration: none;
+      display: block;
+      position: relative;
+    }
+
+    .card:hover {
+      transform: scale(0.985);
+      opacity: 0.9;
+    }
+
+    /* Card with full-width banner image */
+    .card-banner {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Overlay label at bottom of each card */
+    .card-label {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.7));
+      padding: 28px 18px 16px;
+      font-size: 16px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: 0.1px;
+    }
+
+    /* Light card variant (like the DoD card in the reference) */
+    .card-light {
+      background: #e0e0e0;
+    }
+
+    .card-light .card-label {
+      background: linear-gradient(transparent, rgba(0,0,0,0.55));
+      color: #fff;
+    }
+
+    /* Card with logo badge in corner */
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      width: 36px;
+      height: 36px;
+      background: #000;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-badge-text {
+      font-size: 9px;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+    }
+
+    /* Solid color card (no image) */
+    .card-solid {
+      height: 80px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      background: #1a1a1a;
+    }
+
+    .card-solid-label {
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.2px;
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: #000;
+      padding: 16px 24px 32px;
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: rgba(255,255,255,0.3);
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- ═══════════════════════════════════════
+         HERO / PHOTO SECTION
+    ════════════════════════════════════════════
+    📸 Replace the src below with your actual photo URL.
+    
+    Options:
+      1. Online URL:  src="https://example.com/your-photo.jpg"
+      2. Local file:  src="your-photo.jpg"   (same folder as this HTML)
+      3. Base64:      src="data:image/jpeg;base64,/9j/4AAQ..."
+    ═══════════════════════════════════════════ -->
+    <div class="hero">
+      <img
+        class="hero-photo"
+        src="backgroundphoto.png"
+        alt="Tumisang Khabisi"
+        onerror="this.style.display='none'"
+      />
+
+      <div class="hero-overlay"></div>
+
+      <div class="profile-info">
+        <h1 class="profile-name">Tumisang Khabisi</h1>
+
+        <!-- 🏷️ Change @yourhandle to your actual username -->
+        <p class="profile-handle">Software Developer</p>
+
+        <!-- ═══════════════════════════════════════
+             SOCIAL MEDIA ICONS
+             Add/remove icons as needed.
+             Replace href="#" with your actual profile URLs.
+        ═══════════════════════════════════════════ -->
+        <div class="social-icons">
+          <!-- YouTube -->
+          <a href="https://www.youtube.com/@ThutoClub" class="social-icon" target="_blank" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+          </a>
+
+          <!-- Instagram -->
+          <a href="#" class="social-icon" target="_blank" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
+          </a>
+
+          <!-- WhatsApp -->
+          <a href="#" class="social-icon" target="_blank" aria-label="WhatsApp">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+            </svg>
+          </a>
+
+          <!-- Facebook -->
+          <a href="#" class="social-icon" target="_blank" aria-label="Facebook">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+          </a>
+
+
+          <!-- Threads -->
+          <a href="#" class="social-icon" target="_blank" aria-label="Threads">
+            <svg viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+              <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.229c8.249.053 14.474 2.452 18.503 7.129 2.932 3.405 4.893 8.11 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.371-39.134 15.264-38.105 34.568.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.351-22.809-.169-40.06-7.484-51.275-21.742C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.204 17.11 97.013 16.94c22.975.17 40.526 7.52 52.171 21.847 5.71 7.026 10.015 15.86 12.853 26.162l16.147-4.308c-3.44-12.68-8.853-23.606-16.219-32.668C147.036 9.607 125.202.195 97.07 0h-.113C68.882.195 47.292 9.642 32.788 28.08 19.882 44.485 13.224 67.315 13.001 95.932L13 96v.067c.224 28.617 6.882 51.447 19.788 67.854C47.292 182.358 68.882 191.805 96.957 192h.113c24.96-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.723-24.553ZM98.44 129.507c-10.44.588-21.286-4.098-21.82-14.135-.397-7.442 5.296-15.746 22.461-16.735 1.966-.113 3.895-.169 5.79-.169 6.235 0 12.068.606 17.371 1.765-1.978 24.702-13.58 28.713-23.802 29.274Z"/>
+            </svg>
+          </a>
+
+          <!-- X (Twitter) -->
+          <a href="https://x.com/khabisixivk" class="social-icon" target="_blank" aria-label="X / Twitter">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.736l7.73-8.835L1.254 2.25H8.08l4.261 5.632zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         BIO / TAGLINE
+         ✏️ Replace the text below with your own short bio,
+         promo code, or call to action.
+    ═══════════════════════════════════════════ -->
+    <div class="tagline">
+      <p class="tagline-text">
+        Bringing ideas to life with code<br>
+        | Backend Developer|
+      </p>
+    </div>
+
+    <!-- ═══════════════════════════════════════
+         LINK CARDS
+         Add/edit cards below. Each card is a clickable
+         link to one of your projects, brands, or platforms.
+
+         🖼️ For cards with images:
+         Replace src="YOUR_CARD_IMAGE_HERE" with your image URL.
+         Recommended image size: 800×400px (landscape)
+    ═══════════════════════════════════════════ -->
+    <div class="cards-section">
+
+      <!-- ── CARD 1: Main project / portfolio ── -->
+      <!-- 
+        📝 Edit:
+          - href → your project or portfolio URL
+          - src   → your card banner image URL
+          - .card-label text → your card title
+      -->
+      <a href="https://thuto-club.vercel.app" class="card" target="_blank">
+        <div class="card-badge">
+          <span class="card-badge-text">TC</span>
+        </div>
+        <img
+          class="card-banner"
+          src="imagecard.png"
+          alt="ThutoClub"
+          onerror="this.style.background='#222'; this.style.height='180px';"
+        />
+        <div class="card-label">Check out my project!</div>
+      </a>
+
+      <!-- ── CARD 2: Second link / brand / project ── -->
+      <a href="https://github.com/Tumisangkhabisi" class="card card-light" target="_blank">
+        <div class="card-badge">
+          <span class="card-badge-text">TK</span>
+        </div>
+        <img
+          class="card-banner"
+          src="me.png"
+          alt="Tumisangkhabisi"
+          onerror="this.style.background='#ccc'; this.style.height='180px';"
+        />
+        <div class="card-label">Follow my Github</div>
+      </a>
+
+      <a href="#" class="card" target="_blank">
+        <div class="card-solid">
+          <span class="card-solid-label"> Watch my latest video</span>
+        </div>
+      </a>
+
+      <!-- ── CARD 4: Another solid card ── -->
+      <a href="#" class="card" target="_blank">
+        <div class="card-solid" style="background:#111; border: 1px solid #222;">
+          <span class="card-solid-label">📩  Get in touch</span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- ─── FOOTER ─── -->
+    <div class="footer">
+      <p class="footer-text">© 2026 Tumisang Khabisi -Available for collaborations</p>
+    </div>
+
+  </div>
+</body>
+</html>
